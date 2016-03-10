@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block headtitle %} - Home{% endblock %}
+
+{% block content %}
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Example headline.</h1>
+              <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Another example headline.</h1>
+              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>One more for good measure.</h1>
+              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div><!-- /.carousel -->
+
+<div class="jumbotron">
+	<div class="container">
+		<h1>Qomon</h1>
+		{% if not guser %}	
+		<p class="lead">A free app to help you keep track of common expenses </p>
+		<a class="btn btn-large btn-success" href="{{ url_for('users.register') }}">Sign up today!</a>
+		{% else %}
+		<p class="lead">A free app to help you keep track of common expenses </p>
+		<a class="btn btn-large btn-success" href="{{ url_for('users.profile') }}">Go to your account!</a>
+		{% endif %}
+	</div>
+</div> <!-- jumbotron -->
+	  
+<hr class="featurette-divider">
+
+<div class="row featurette">
+  <div class="col-md-7 col-sm-8 col-xs-8">
+    <h2 class="featurette-heading">Tracking common expenses <span class="text-muted"> is now simple</span></h2>
+    <p class="lead">Qomon is the perfect tool for couples, roommates, colleagues, or small groups that need to keep track of common expenses. It helps you keep a tab of what each partner spent and tells you how much you owe each other. </p>
+  </div>
+  <div class="col-md-5 col-sm-4 col-xs-4">
+    <img class="featurette-image img-responsive img-circle" src="{{ url_for('static', filename='img/front.jpg') }}" alt="Generic placeholder image">
+  </div>
+</div>
+
+
+<hr>  <!--horizontal line-->
+
+<h2 class="text-success"> It's simple! Here is a snippet: </h2>
+<h5> &nbsp; </h5>
+<div class="container">
+	<img src="{{ url_for('static', filename='img/demo.png') }}" 
+	     width=100% height=100% class="img-rounded img-responsive col-centered  ImageBorder" >
+</div> <!-- class jumbotron -->
+
+<hr>  <!--horizontal line-->
+
+
+{% endblock %}

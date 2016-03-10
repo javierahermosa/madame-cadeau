@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+{% block head %}
+
+	<title>Qomon{% block headtitle %}{% endblock %}</title>
+ 	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 	<meta name="description" content="">
+ 	<meta name="keywords" content="">
+ 	<meta name="author" content="Javiera Guedes">
+ 	<meta charset="utf-8">
+	<meta name="google-site-verification" content="R4aM1kCfyRrN-DMD8E7MnCArFdugnAzlXBy3_DTswVw" />
+
+	<link type="text/css" rel="stylesheet" 
+		  href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+	<link type="text/css" rel="stylesheet"
+		  href="{{ url_for('static', filename='css/my.css') }}" />
+	<link type="text/css" rel="stylesheet" 
+	  	  href="{{ url_for('static', filename='css/datepicker.css') }}" />
+	<link rel="shortcut icon" 
+	      href="{{ url_for('static', filename='ico/qomon.ico') }}">		
+	<link rel='stylesheet' type='text/css' 
+		  href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' >
+    <link type="text/css" rel="stylesheet"
+		  href="{{ url_for('static', filename='css/carousel.css') }}" />
+    <link href='https://fonts.googleapis.com/css?family=Pacifico'
+          rel='stylesheet' type='text/css'>
+	{% endblock %}
+ 
+
+    <title>My Title</title>
+
+</head>
+	
+
+ <body onunload="unloadP('thispage')" onload="loadP('thispage')">
+
+     <div class="navbar-wrapper">
+      <div class="container">
+
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="{{ url_for('users.home') }}">Waves of Joy</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav pull-right">
+                <li><a href="{{ url_for('users.home') }}">Home</a></li>
+                <li><a href="{{ url_for('users.about') }}">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                  {% if guser %}
+                  <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{guser.name}} <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{ url_for('users.profile') }}">My Qomon</a></li>
+			 	 		<li><a href="{{ url_for('users.settings') }}">Settings</a></li>
+			     		<li class="divider"></li>
+			     		<li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                  </ul>
+                </li>
+			    {% endif %}
+
+				{% if not guser %}
+					<li><a href="{{ url_for('users.login') }}">Log in</a></li>
+			 	{% endif %}
+
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+      </div>
+    </div>
+
+
+	 <div class="container-narrow">
+
+	<hr> <!--horizontal line-->
+
+	{% block content %}
+	{% endblock %}
+	  	  
+	{% block footer %}
+ 	<footer class="footer">
+		<p>Qomon is powered by 
+			<a href="http://flask.pocoo.org/docs/">Flask</a>,
+			<a href="http://getbootstrap.com/">Bootstrap</a>,
+			<a href="http://glyphicons.com/"> Glyphicons</a>, and 
+			<a href="https://www.heroku.com/">Heroku</a>.
+		</p>
+		<p>&copy; Javiera Guedes</p>
+	</footer>
+    {% endblock %}
+	
+	</div> <!-- container narrow -->  
+
+ <!-- javascript -->
+	<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap-datepicker.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/scrollfix.js') }}"></script>
+    
+ 	<script>
+    	$(function(){
+    	  	$('.datepicker').datepicker({
+    	  		format: 'dd M yyyy',
+    	  		autoclose: true
+    	  		});
+    	  });
+    </script>
+	
+	<script>  
+	    $(document).ready(function () {  
+	        $('.dropdown-toggle').dropdown();  
+	     });  
+	</script> 
+	   
+	<script>  
+	   $(function() {
+	     $('.table').tablesorter({
+	     	cssInfoBlock : "avoid-sort"
+	     });
+	   });
+	</script> 	
+	
+	 <script>  
+	 var $btn2 = $('#popover');
+	 $btn2.data('state', 'hover');
+
+	 var enterShow = function () {
+	     if ($btn2.data('state') === 'hover') {
+	         $btn2.popover('show');
+	     }
+	 };
+	 var exitHide = function () {
+	     if ($btn2.data('state') === 'hover') {
+	         $btn2.popover('hide');
+	     }
+	 };
+
+	 var clickToggle = function () {
+	     if ($btn2.data('state') === 'hover') {
+	         $btn2.data('state', 'pinned');
+	     } else {
+	         $btn2.data('state', 'hover')
+	         $btn.popover('hover');
+	     }
+	 };
+
+	 $btn2.popover({trigger: 'manual'})
+	     .on('mouseenter', enterShow)
+	     .on('mouseleave', exitHide)
+	     .on('click', clickToggle);
+	
+	</script> 	
+	
+	<script type="text/javascript">
+	    $(function () {
+	        $("[rel='tooltip']").tooltip();
+	    });
+	</script>
+	
+	<script>
+		
+		$(document).ready(function() {
+	   	 if (saveformErrors) {
+	        	$("[id='save']").modal('show');
+	    }
+	});
+
+	</script>
+			
+
+</body>
+</html>

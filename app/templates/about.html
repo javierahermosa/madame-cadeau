@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block headtitle %} - About{% endblock %}
+{% block title %} Qomon{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<img src="{{ url_for('static', filename='img/front.jpg') }}" 
+		     width=40% height=40% class="img-circle img-responsive col-centered" >
+
+		<h3> Qomon is an application developed to help couples or small groups 
+			keep track of their common expenses. 
+		</h3>
+		<h3> If you and your partner / roommate / friend / colleague spend money on 
+			 common items such as groceries, gifts, utility bills, etc., but you 
+			 use your own money to pay for them, you may want to know how much you 
+			 owe each other at the end of the month. This is where Qomon comes in.
+		</h3>
+		<h3> You can add up to two partners! Just add your partner's email on the 
+			settings page, ask your partner to add yours, <em>et Voil&agrave</em>.
+		</h3>
+		<h3> Qomon was developed by Javiera Guedes, feel free to send her your 
+			comments or questions to 
+			<a href="mailto:javierahermosa@yahoo.com">this email</a> address. 
+		</h3>
+	</div> <!-- column -->
+</div> <!--row-->
+
+
+{% endblock %}

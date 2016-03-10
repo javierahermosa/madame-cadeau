@@ -1,0 +1,471 @@
+{% extends "base.html" %}
+{% block headtitle %} - Profile{% endblock %}
+
+{% block content %}
+
+{% with errors = get_flashed_messages(category_filter=["delete"]) %}
+	{% if errors %}
+    	{%- for msg in errors %}
+    		<p class="text-danger">{{ msg }}</li>
+    	{% endfor -%}
+	{% endif %}
+{% endwith %}
+
+
+<div class="row">
+	<div class="col-xs-4 col-sm-5 col-md-4 col-lg-4">
+		
+		<h3 class="text-mutted text-left">  Add a new qomon expense! </h3>  
+		{% from "forms/macros.html" import render_field %}
+		<form role="form" class="form form-medium" action="{{ url_for('users.profile') }}" method="post">
+		{{ form.csrf_token }}
+			<div class="form-group">
+				{{ render_field(form.date, class="form-control input-small text datepicker") }}
+      	  	</div>
+      
+	  	  	<div class="form-group">
+	    		{{ render_field(form.description, class="form-control input-large text") }}
+      	  	</div>
+      	    <div class="input-group">
+				<span class="input-group-addon">$</span>
+		        {{ render_field(form.amount, class="form-control input-small text") }}
+            </div>
+			<p> &nbsp;</p>
+            {% if user.current_list == "new" %}
+	  		<button type="submit" class="btn btn-success" name="btn" value="add">Add</button>
+		    {% else %}
+		    <button type="submit" class="btn btn-success disabled" value="add">Add</button>
+			{% endif %}
+		 </form>
+    
+	 </div><!-- column-->
+	 
+     <div class="col-xs-5 col-sm-5 col-md-6 col-lg-6 col-xs-offset-2 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 "  style="background-color:#F0F0F0 ">
+	    <table class="table-responsive">
+			<tr>
+				<td><h3 class="text-left"><strong>{{user.name}}</strong> spent:&nbsp;&nbsp;</h3></td>
+				<td> </td>
+				<td><h3 class="text-right">$ {{ '%.2f' % bal['ts_user'] }}</h3></td>
+				<td> </td>
+			</tr>
+			
+			{% if p1 %}
+			<tr>
+				<td><h3 class="text-left"> <strong>{{p1.name}}</strong> spent: </h3></td>
+				<td>&nbsp;</td>
+				<td><h3 class="text-right">$ {{ '%.2f' % bal['ts_p1'] }}</h3></td>
+				<td> </td>
+			</tr>
+	        {% endif %}
+			
+			{%  if p2 %}
+			<tr>
+				<td><h3 class="text-left"><strong>{{p2.name}}</strong>  spent: </h3></td>
+				<td>&nbsp;</td>
+				<td><h3 class="text-right">$ {{'%.2f' % bal['ts_p2'] }}</h3></td>
+				<td> </td>
+			</tr>
+			{% endif %}
+			
+			{% if not p1 or not p2 %}
+			<tr>
+				<td>
+				    <a class="text-muted" href="{{ url_for('users.settings') }}">
+						<span class="glyphicon glyphicon-plus-sign text-muted"></span> Add Partner
+					</a> 
+				</td>
+			</tr>
+			{% endif %}
+			
+			{% if (p1 and not p2) or (p2 and not p1) %}
+			<tr>
+				<td><h3 class="text-left"><em>{{bal['ower']}} owes {{bal['receiver']}}:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{ '%.2f' % bal['amount_owned'] | abs() }}</strong></em></h3>
+				</td>
+				<td style="vertical-align:middle">
+				<h3 class="text-right">&nbsp;
+			    {% for li in lists %}
+					{% if  li.list_name == user.current_list and li.user_id == bal.ower_id %}
+						{% if li.payed %}
+			 			<a class="text-success" rel="tooltip" title="Mark as unpayed"
+						href="{{ url_for('users.mark_payed',listname=li.list_name, 
+								 payed_by=bal.ower_id, receiver=bal.receiver_id) }}">
+			 			<span class="glyphicon glyphicon-ok-circle"> 
+			 			</a> 
+						<td><h3 class="text-success">Paid</h3></td>
+						{% else %}
+			 			<a class="text-muted"  rel="tooltip" title="Mark as payed"
+						href="{{ url_for('users.mark_payed',listname=li.list_name, 
+						         payed_by=bal.ower_id, receiver=bal.receiver_id) }}">
+			 			<span class="glyphicon glyphicon-ok-circle"> 
+			 			</a> 
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+				</h3>
+				</td>
+			</tr>
+			{% endif %}
+			
+			{% if p1 and p2 %}
+			{% if bal['n_owers']== 1 %}
+			<tr>
+				<td><h3 class="text-left"><em>{{bal['ower']}} owes {{bal['receiver1']}}:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{ '%.2f' % bal['amount_owed1'] |abs() }}</strong></em></h3>
+				</td>
+				<td style="vertical-align:middle">
+					<h3 class="text-right">&nbsp;
+				    {% for li in lists %}
+						{% if  li.list_name == user.current_list and li.user_id == bal.receiver1_id %}
+							{% if li.received  %}
+				 			<a class="text-success" rel="tooltip" title="Mark as unpayed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+							         payed_by=bal.ower_id, receiver=bal.receiver1_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							<td><h3 class="text-success">Paid</h3></td>
+							{% else %}
+				 			<a class="text-muted"  rel="tooltip" title="Mark as payed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+							         payed_by=bal.ower_id, receiver = bal.receiver1_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+					</h3>
+				</td>
+			</tr>
+				
+			<tr>
+				<td><h3 class="text-left"><em>{{bal['ower']}} owes {{bal['receiver2']}}:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{'%.2f' % bal['amount_owed2'] | abs() }}</strong></em></h3>
+				</td>
+				<td style="vertical-align:middle">
+					<h3 class="text-right">&nbsp;
+				    {% for li in lists %}
+						{% if  li.list_name == user.current_list and li.user_id == bal.receiver2_id %}
+							{% if li.received %}
+				 			<a class="text-success" rel="tooltip" title="Mark as unpayed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+							         payed_by=bal.ower_id, receiver=bal.receiver2_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							<td><h3 class="text-success">Paid</h3></td>
+							{% else %}
+				 			<a class="text-muted"  rel="tooltip" title="Mark as payed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+							         payed_by=bal.ower_id, receiver=bal.receiver2_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+					</h3>
+				</td>
+			   
+			</tr>	
+			{% elif bal['n_owers']==2 %}
+			<tr>
+				<td><h3 class="text-left"><em>{{bal['ower1']}} owes {{bal['receiver']}}:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{ '%.2f' % bal['amount_owed1'] | abs() }}</strong></em></h3>
+				</td>
+				<td style="vertical-align:middle">
+					<h3 class="text-right">&nbsp;
+				    {% for li in lists %}
+						{% if  li.list_name == user.current_list and li.user_id == bal.ower1_id %}
+							{% if li.payed %}
+				 			<a class="text-success" rel="tooltip" title="Mark as unpayed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+							         payed_by=bal.ower1_id, receiver = bal.receiver_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							<td><h3 class="text-success">Paid</h3></td>
+							{% else %}
+				 			<a class="text-muted"  rel="tooltip" title="Mark as payed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+							         payed_by=bal.ower1_id, receiver=bal.receiver_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+					</h3>
+				</td>
+				
+				</tr>
+				
+			<tr>
+				<td><h3 class="text-left"><em>{{bal['ower2']}} owes {{bal['receiver']}}:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{'%.2f' % bal['amount_owed2'] | abs() }}</strong></em></h3>
+				</td>
+				<td style="vertical-align:middle">
+					<h3 class="text-right">&nbsp;
+				    {% for li in lists %}
+						{% if  li.list_name == user.current_list and li.user_id == bal.ower2_id %}
+							{% if li.payed %}
+				 			<a class="text-success" rel="tooltip" title="Mark as unpayed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+									 payed_by=bal.ower2_id, receiver=bal.receiver_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							<td><h3 class="text-success">Paid</h3></td>
+							{% else %}
+				 			<a class="text-muted"  rel="tooltip" title="Mark as payed"
+							href="{{ url_for('users.mark_payed',listname=li.list_name, 
+									 payed_by=bal.ower2_id, receiver = bal.receiver_id) }}">
+				 			<span class="glyphicon glyphicon-ok-circle"> 
+				 			</a> 
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+					</h3>
+				</td>
+			</tr>	
+			{% endif %}
+			{% endif %}
+			
+			{# 
+			<tr>
+				<td><h3 class="text-left"><em>mean:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{'%.2f' % bal['mean']  }}</strong></em></h3>
+				</td>
+			</tr>
+			<tr>
+				<td><h3 class="text-left"><em>diff:</em></h3></td>
+				<td></td>
+				<td class="text-warning">
+					<h3 class="text-right"><em><strong> $ {{'%.2f' % bal['diff_u']  }} {{'%.2f' % bal['diff_p1']  }} {{'%.2f' % bal['diff_p2']  }}</strong></em></h3>
+				</td>
+			</tr>
+	
+			#}
+			
+				
+		</table>
+	    <p>&nbsp;</p>
+		
+	</div> <!-- column-->
+</div> <!--row-->
+      
+<hr>  <!--horizontal line-->
+
+<div class="row">
+	<div class="col-sm-6 col-md-4 col-lg-">
+		<div class="btn-group pull-left">
+			
+			{% if user.current_list == "new" %}
+			<a class="btn btn-primary" href="{{ url_for('users.current_list',list_name='new') }}">Current List</a>
+			{% else %}
+			<a class="btn btn-default" href="{{ url_for('users.current_list',list_name='new') }}">Current List</a>
+			{% endif %}
+			
+			<div class="btn-group">
+				
+			{% if user.current_list == "new" %}
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> 
+				Archived 
+			{% else %}
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+				{{user.current_list}}
+			{% endif %}	
+				<span class="caret"></span>
+			</button>	
+			
+			<ul class="dropdown-menu" role="menu">
+			{% for list in unique_listnames %}
+				{% if list != "new" %}
+				<li>
+					<a href="{{ url_for('users.current_list',list_name=list) }}"
+					   data-target="#Save">{{list}}</a>
+				</li>
+				{% endif %}
+			{% endfor %}
+			
+		    {% if unique_listnames | length == 1 %}
+			<li><p class="text-muted"> &nbsp; <em> No archived lists </em></p></li>
+			{% endif %}	
+			
+		</div>
+	</div>
+	</div>
+   
+	<div class="col-sm-6 col-md-6 col-lg-6 col-md-offset-2">
+		<div class="btn-group pull-right">
+	        {% if user.current_list == "new" %}	
+			<button type="button" class="btn btn-default" rel="tooltip" 
+			        title="Archive List &amp; Start New" data-toggle="modal" role="dialog" data-target="#save"> 
+				
+				<span class="glyphicon glyphicon-flash"></span>
+			</button>
+			{% else %}
+			<button type="button" class="btn btn-default disabled" rel="tooltip" 
+			        title="Archive List &amp; Start New" data-toggle="modal" role="dialog" data-target="#save"> 
+				
+				<span class="glyphicon glyphicon-flash"></span>
+			</button>
+			{% endif %}
+  		  	<button class="btn btn-default" rel="tooltip" 
+			         title="Delete List" data-toggle="modal"  role="dialog" data-target="#delete_new">
+				<span class="glyphicon glyphicon-trash"></span>
+			</button>
+		</div>
+	</div> <!-- column-->
+</div>  <!--row-->
+
+
+<!-- Modal Delete List -->
+<div class="modal fade" id="delete_new" tabindex="-1" role="dialog" aria-labelledby="deletemodal" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h3 class="modal-title" id="myModalLabel">Warning! </h3>
+       </div>
+       <div class="modal-body">
+         <h4>Are you sure that you want to <strong>clear all entries </strong> in {{user.current_list}}?</h4>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		 <a href="{{ url_for('users.delete_new') }}">
+		  <button class="btn btn-danger">Delete Entries</button></a> 
+       </div>
+     </div><!-- modal content -->
+   </div><!-- modal-dialog -->
+</div><!-- modal -->
+ 
+
+<!-- Modal Save List -->
+<div class="modal fade" id="save" tabindex="-1" role="dialog" aria-labelledby="savemodal" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h3 class="modal-title" id="myModalLabel">Archive List and Start New</h3>
+       </div>
+	   
+	   <form role="form_list" class="form form-medium" action="." method="post">
+	   {{ form_save.csrf_token }}
+	   	<div class="modal-body">	
+		 	<h4>Save list as: </h4>
+		 	{{ render_field(form_save.list_name, class="input-large") }}
+       	</div>
+
+      	<div class="modal-footer">
+         	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		 	<a href="#">
+		  	  <button class="btn btn-success" name="btn" value="archive">Archive List</button></a> 
+       	</div>
+      </form>
+	  
+     </div><!-- modal content -->
+   </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<p>&nbsp;<p>
+
+<table onunload="unloadP('.')" onload="loadP('.')" 
+       class="table table-responsive table-striped tablesorter" id="account-table">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Who <span class="caret"></span></th>
+			<th class="text-center">Date  <span class="caret"></th>
+			<th class="text-center">Description <span class="caret"></th>
+			<th class="text-right">Spent <span class="caret"></th>
+			<th class="text-right">Action</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		{% for entry in entries %}   
+   		<tr>	
+	 	   <td> {{loop.index}} </td>
+	 	   <td> {{entry.user_name}} </td>
+	 	   
+	 	   {% if entry.edit and entry.user_id == user.id %}
+	 	   		<form role="form" class="form form-medium" name="btn" value="add"
+				      action="{{ url_for('users.profile') }}" method="post">
+	 				{{ form.csrf_token }}
+     			   <td class="text-center"> 
+	 					{{ render_field(form.date,  
+						   class="form-control input text-center datepicker", value=entry.date) }}
+	 				</td>
+	 				<td class="text-center"> 
+	 					{{ render_field(form.description,
+						   class="form-control input text-center", value=entry.description) }}
+	 				</td>
+	 				<td class="text-right"> 
+	 					{{ render_field(form.amount,
+						   class="form-control input text-right", value= '%.2f' % entry.spent) }} 
+	 				</td>	
+	 				<td class="text-right">
+						<button type="submit" name="btn" value="add" class="btn btn-info">Edit</button>
+					</td>
+ 	 		  	</form>
+	 		
+	 	   {% else %}
+         	   	<td class="text-center">{{entry.date}}</td>
+	 			<td class="text-center">{{entry.description}}</td>
+	 		
+	 	   {% if entry.spent > 0 %}
+	 			<td class="text-right">$ {{ '%.2f' % entry.spent}}</td>
+	 	   {% else %}
+	 			<td class="muted"> </td>
+	 	   {% endif %}
+	 	   
+	 		<td class="text-right">
+	 			<a href="{{ url_for('users.edit_entry',entry_id=entry.trans_id) }}">
+	 				<span class="glyphicon glyphicon-pencil"></span>
+	 			</a> 
+	 			<a href="{{ url_for('users.delete_entry',entry_id=entry.trans_id) }}">
+	 				<span class="glyphicon glyphicon-remove"></span>
+	 			</a> 
+	 		</td>
+	 	    {% endif %}	
+		 </tr>    
+	    {% endfor %}
+		
+		{% if entries | length == 0 %} 
+		<tbody class="avoid-sort">
+			<tr>
+				
+				<td class="text-muted"> <em>No entries yet</em></td>
+				<td> </td>
+				<td> </td>
+				<td> </td>
+				<td> </td>
+				<td> </td>
+			</tr>
+	    </tbody>
+		{% endif %}
+		
+	<tbody class="avoid-sort">
+		<tr class="active">
+			<td><strong>TOTAL</strong> </td>
+			<td> </td>
+			<td> </td>
+			<td></td>
+			<td class="text-right"> <strong> $ {{  '%.2f' % bal['ts'] }} <strong></td>
+			<td class="text-right">  </td>
+		</tr>
+    </tbody>
+	
+</table>
+
+<script> var saveformErrors = {% if form_save.errors %}true{% else %}false{% endif %}; </script> 
+{% endblock %}
+
+

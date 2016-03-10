@@ -1,0 +1,93 @@
+/* This piece was originally in base.html */
+/*<style type="text/css"> */
+  body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+
+/* nav bar */
+.navbar-inverse {
+    background-color: #EA2020;
+    border-color: #E45050;
+    font-size: 18px;
+}
+
+.navbar-collapse {
+    background-color: #EA2020;
+    border-color: #E45050;
+    font-size: 18px;
+}
+
+.container > .navbar-header, .container > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+    font-family: 'Share+Tech+Mono', serif;
+    font-size: 18px;
+}
+
+.navbar-brand {
+    float: left;
+    padding: 15px 15px;
+    font-size: 24px;
+    font-family: 'Pacifico';
+    line-height: 20px;
+}
+
+.container > .navbar-header, .container > .navbar-collapse {
+    font-family: 'Pacifico';
+    font-size: 18px;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #F3E4E4;
+}
+
+
+.navbar-inverse .navbar-brand {
+    color: #F5E5E5;
+}
+
+  /* Custom container */
+  .container-narrow {
+    margin: 0 auto;
+    max-width: 1200px;
+
+  }
+
+  .container-narrow > hr {
+    margin: 30px 0;
+  }
+
+  .container-narrow h2 {
+    font-family: 'Share+Tech+Mono', serif;
+	text-weight:bold;
+  }
+
+  .container-narrow h3 {
+    font-family: 'Share+Tech+Mono', serif;
+	text-weight:bold;
+  }
+
+  .container-narrow h4 {
+    font-family: 'Share+Tech+Mono', serif;
+	text-weight:bold;
+  }
+
+.input-small {
+  padding: 10px !important;
+  width: 120px !important;
+  height: 42px !important;
+  }
+
+  .input-medium {
+  padding: 10px;
+  width: 150px !important;
+  height: 42px !important;
+  }
+
+  .input-large {
+  padding: 10px;
+  width: 220px !important;
+  height: 42px !important;
+  }
